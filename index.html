@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f8f4ea" />
+  <meta name="description" content="毎日の習慣を静かに記録する" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" href="./icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=IBM+Plex+Sans+JP:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Habits — 静かな記録</title>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="navBack" hidden aria-label="戻る">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h1 class="title" id="screenTitle">Today</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="navStats" aria-label="統計">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18M7 14l4-4 4 4 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn" id="navSettings" aria-label="設定">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Today -->
+      <section class="screen" id="screen-today" data-screen="today">
+        <div class="group-selector" id="groupSelector">
+          <div class="group-color-dot" id="selectedGroupDot" style="background:var(--accent)"></div>
+          <div class="group-label" id="selectedGroupLabel">—</div>
+          <svg class="chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="group-dropdown" id="groupDropdown" hidden></div>
+        </div>
+
+        <div class="date-block">
+          <div class="date-day" id="todayDay">—</div>
+          <div class="date-meta" id="todayMeta">—</div>
+          <div class="date-progress" id="todayProgress"></div>
+        </div>
+
+        <ul class="habit-list" id="habitList"></ul>
+
+        <div class="diary-card">
+          <label class="diary-label" for="diaryInput">今日のメモ</label>
+          <textarea id="diaryInput" rows="3" placeholder="一日の手触りを残す。"></textarea>
+        </div>
+
+        <button class="add-fab" id="addHabitBtn" aria-label="習慣を追加">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </button>
+      </section>
+
+      <!-- Stats -->
+      <section class="screen" id="screen-stats" data-screen="stats" hidden>
+        <div class="stats-summary">
+          <div class="stat-cell"><div class="stat-value" id="statTotalHabits">—</div><div class="stat-label">習慣数</div></div>
+          <div class="stat-cell"><div class="stat-value" id="statTodayDone">—</div><div class="stat-label">本日達成</div></div>
+          <div class="stat-cell"><div class="stat-value" id="statRate30">—</div><div class="stat-label">30日達成率</div></div>
+        </div>
+
+        <div class="section-head"><span>今日 / グループ別</span></div>
+        <div id="groupStatsList"></div>
+
+        <div class="section-head"><span>習慣別</span><span class="section-meta">過去30日</span></div>
+        <div class="stats-list" id="statsList"></div>
+      </section>
+
+      <!-- Detail -->
+      <section class="screen" id="screen-detail" data-screen="detail" hidden>
+        <div class="detail-header">
+          <h2 class="serif" id="detailName">—</h2>
+          <div class="detail-meta" id="detailMeta">—</div>
+          <div class="detail-groups" id="detailGroups"></div>
+        </div>
+
+        <div class="streak-row">
+          <div class="streak-cell"><div class="streak-value" id="detailStreak">—</div><div class="streak-label" id="detailStreakLabel">連続</div></div>
+          <div class="streak-cell"><div class="streak-value" id="detailBestStreak">—</div><div class="streak-label">最長</div></div>
+          <div class="streak-cell"><div class="streak-value" id="detailRate">—</div><div class="streak-label">30日達成率</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>カレンダー</h3>
+            <div class="month-nav">
+              <button class="icon-btn" id="prevMonth" aria-label="前月">‹</button>
+              <span id="calMonthLabel">—</span>
+              <button class="icon-btn" id="nextMonth" aria-label="次月">›</button>
+            </div>
+          </div>
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>過去30日</h3></div>
+          <div class="bars" id="barsChart"></div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn-ghost" id="editHabitBtn">編集</button>
+          <button class="btn-danger" id="deleteHabitBtn">削除</button>
+        </div>
+      </section>
+
+      <!-- Groups management -->
+      <section class="screen" id="screen-groups" data-screen="groups" hidden>
+        <p class="muted small" style="margin: 8px 0 18px;">⋮⋮ をドラッグで並べ替え。</p>
+        <div class="reorder-list" id="groupManageList"></div>
+        <button class="btn" id="addGroupBtn" style="width:100%">+ グループを追加</button>
+      </section>
+
+      <!-- Habit reorder -->
+      <section class="screen" id="screen-habits-reorder" data-screen="habits-reorder" hidden>
+        <p class="muted small" style="margin: 8px 0 18px;">⋮⋮ をドラッグで並べ替え。順序はTodayと統計画面に反映されます。</p>
+        <div id="habitReorderList"></div>
+      </section>
+
+      <!-- Settings -->
+      <section class="screen" id="screen-settings" data-screen="settings" hidden>
+        <div class="card">
+          <div class="card-head"><h3>分類・並び順</h3></div>
+          <div class="settings-link" id="linkGroups">
+            <span>グループ管理</span><span class="arrow">›</span>
+          </div>
+          <div class="settings-link" id="linkHabitsReorder">
+            <span>習慣の並び順</span><span class="arrow">›</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>表示</h3></div>
+          <label class="row between">
+            <span>テーマ</span>
+            <select id="themeSelect" style="width:auto;">
+              <option value="light">ライト</option>
+              <option value="dark">ダーク</option>
+              <option value="auto">システム連動</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>通知</h3></div>
+          <p class="muted small">開いている間のローカル通知に対応。アプリ終了時の確実な定期通知はPWA単体では制約あり。</p>
+          <button class="btn" id="enableNotifBtn">通知を許可</button>
+          <p class="muted small" id="notifStatus" style="margin-top:8px;"></p>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>データ</h3></div>
+          <div class="row">
+            <button class="btn-ghost" id="exportBtn">エクスポート</button>
+            <button class="btn-ghost" id="importBtn">インポート</button>
+            <input type="file" id="importFile" accept="application/json" hidden />
+          </div>
+          <button class="btn-danger" id="resetBtn" style="margin-top:10px;">全データを消去</button>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>About</h3></div>
+          <p class="muted small">Habits — 静かな記録 / Personal PWA / v3</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Habit modal -->
+    <div class="modal" id="habitModal" hidden>
+      <div class="modal-card">
+        <h3 class="serif" id="habitModalTitle">習慣を追加</h3>
+
+        <label class="field">
+          <span>名前</span>
+          <input type="text" id="hName" placeholder="例: 朝の瞑想" maxlength="40" />
+        </label>
+
+        <label class="field">
+          <span>記録方式</span>
+          <select id="hType">
+            <option value="check">○×だけ</option>
+            <option value="count">回数(目標値)</option>
+            <option value="time">時間(分)</option>
+          </select>
+        </label>
+
+        <label class="field" id="hTargetField">
+          <span>目標</span>
+          <div class="row">
+            <input type="number" id="hTarget" min="0" step="1" placeholder="30" />
+            <input type="text" id="hUnit" placeholder="単位" maxlength="6" />
+          </div>
+        </label>
+
+        <label class="field">
+          <span>頻度</span>
+          <select id="hFreqType">
+            <option value="daily">毎日</option>
+            <option value="weekdays">曜日を指定</option>
+            <option value="monthly_n">月N回</option>
+            <option value="interval">N日ごと</option>
+          </select>
+
+          <div class="frequency-detail" id="hWeekdaysDetail" hidden>
+            <div class="weekday-picker" id="hWeekdayPicker"></div>
+          </div>
+          <div class="frequency-detail" id="hMonthlyDetail" hidden>
+            <div class="row">
+              <input type="number" id="hMonthlyN" min="1" max="31" step="1" value="1" style="max-width:90px" />
+              <span class="muted small">回 / 月</span>
+            </div>
+            <div class="freq-help">月初から指定回数達成すると、その月は「やらない日」として薄く表示されます。</div>
+          </div>
+          <div class="frequency-detail" id="hIntervalDetail" hidden>
+            <div class="row">
+              <input type="number" id="hIntervalDays" min="1" max="365" step="1" value="3" style="max-width:90px" />
+              <span class="muted small">日ごと</span>
+            </div>
+            <div class="freq-help">最後に達成した日からN日後が次の「やる日」になります。</div>
+          </div>
+        </label>
+
+        <label class="field">
+          <span>所属グループ(複数選択可・必須)</span>
+          <div class="group-check-list" id="hGroupList"></div>
+          <div class="field-error" id="hGroupError" hidden>1つ以上選択してください</div>
+        </label>
+
+        <label class="field">
+          <span>リマインダー(任意)</span>
+          <input type="time" id="hReminder" />
+        </label>
+
+        <label class="field">
+          <span>カラー</span>
+          <div class="color-row" id="colorRow"></div>
+        </label>
+
+        <div class="modal-actions">
+          <button class="btn-ghost" id="hCancel">キャンセル</button>
+          <button class="btn" id="hSave">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group modal -->
+    <div class="modal center-mode" id="groupModal" hidden>
+      <div class="modal-card slim">
+        <h3 class="serif" id="groupModalTitle">グループを追加</h3>
+        <label class="field">
+          <span>名前</span>
+          <input type="text" id="gName" placeholder="例: 健康管理" maxlength="20" />
+        </label>
+        <label class="field">
+          <span>カラー</span>
+          <div class="color-row" id="gColorRow"></div>
+        </label>
+        <div class="modal-actions">
+          <button class="btn-ghost" id="gCancel">キャンセル</button>
+          <button class="btn" id="gSave">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Value modal -->
+    <div class="modal center-mode" id="valueModal" hidden>
+      <div class="modal-card slim">
+        <h3 class="serif" id="valueModalTitle">記録</h3>
+        <div class="value-input-row">
+          <button class="round-btn" id="vMinus" aria-label="減">−</button>
+          <input type="number" id="vInput" min="0" step="1" />
+          <button class="round-btn" id="vPlus" aria-label="増">+</button>
+        </div>
+        <div class="muted small center" id="vTargetHint">—</div>
+        <label class="field">
+          <span>メモ(任意)</span>
+          <input type="text" id="vMemo" placeholder="気づいたことなど" maxlength="120" />
+        </label>
+        <div class="modal-actions">
+          <button class="btn-ghost" id="vCancel">キャンセル</button>
+          <button class="btn" id="vSave">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
